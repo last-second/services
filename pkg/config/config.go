@@ -21,6 +21,7 @@ var Values *Config = nil
 func initConfig() error {
 	viper.AutomaticEnv()
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("../..") // for handlers
 	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 

@@ -1,13 +1,13 @@
 package config
 
-func Init() error {
+import "github.com/sirupsen/logrus"
+
+func Init() {
 	if err := initConfig(); err != nil {
-		return err
+		logrus.WithError(err).Fatal("error initializing config")
 	}
 
 	if err := initLogger(); err != nil {
-		return err
+		logrus.WithError(err).Fatal("error initializing logger")
 	}
-
-	return nil
 }

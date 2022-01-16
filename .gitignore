@@ -1,3 +1,6 @@
+# OS specific
+.DS_Store
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -12,11 +15,7 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
-
-# CDK asset staging directory
-.cdk.staging
-cdk.out
+vendor
 
 # Configuration
 *.env*

@@ -2,24 +2,24 @@ module github.com/last-second/services
 
 go 1.17
 
+replace github.com/last-second/services/pkg => ./pkg
+
 require (
-	github.com/aws/aws-cdk-go/awscdk/v2 v2.0.0
-	github.com/aws/constructs-go/constructs/v10 v10.0.34
+	github.com/aws/aws-lambda-go v1.28.0
+	github.com/last-second/services/pkg v0.0.0-00010101000000-000000000000
+	github.com/sirupsen/logrus v1.8.1
+	github.com/spf13/cobra v1.3.0
 )
 
 require (
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/Masterminds/semver/v3 v3.1.1 // indirect
-	github.com/aws/jsii-runtime-go v1.52.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
-	github.com/spf13/cobra v1.3.0
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.10.1 // indirect
