@@ -1,39 +1,78 @@
 package config
 
 import (
+	"os"
+
+	trace "github.com/hans-m-song/go-stacktrace"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
+
+var (
+	Values *Config
+
+	ErrorReadConfig      = trace.New("ErrorReadConfig")
+	ErrorUnmarshalConfig = trace.New("ErrorUnmarshalConfig")
+
+	envDefaults = map[string]string{
+		"LOGLEVEL":       "debug",
+		"STAGE":          "dev",
+		"AWS_PROFILE":    "",
+		"AWS_REGION":     "",
+		"USERTABLE_NAME": "",
+	}
+)
+
+func setFromEnvOrDefault(key, defaultValue string) {
+	value, ok := os.LookupEnv(key)
+
+	if !ok {
+		viper.SetDefault(key, defaultValue)
+	}
+
+	if len(value) < 1 {
+		viper.SetDefault(key, defaultValue)
+	}
+
+	viper.SetDefault(key, value)
+}
 
 type Config struct {
 	// deployment
 
-	Loglevel string
+	Loglevel string `mapstructure:"loglevel"`
 
 	// runtime
 
-	Region string
-	Stage  string
+	Stage         string `mapstructure:"stage"`
+	AwsProfile    string `mapstructure:"aws_profile"`
+	AwsRegion     string `mapstructure:"aws_region"`
+	UsertableName string `mapstructure:"usertable_name"`
 }
 
-var Values *Config = nil
-
 // Retrieves or instantiates singleton instance of config values
-func initConfig() error {
-	viper.AutomaticEnv()
-	viper.AddConfigPath(".")
+func initConfig() *trace.Error {
 	viper.AddConfigPath("../..") // for handlers
 	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 
 	if err := viper.ReadInConfig(); err != nil {
-		return err
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			logrus.Debug("no config file found")
+			return ErrorReadConfig.Trace(err)
+		}
 	}
 
-	values := &Config{}
-	if err := viper.Unmarshal(values); err != nil {
-		return err
+	for key, defaultValue := range envDefaults {
+		setFromEnvOrDefault(key, defaultValue)
 	}
-	Values = values
+
+	if Values == nil {
+		Values = &Config{}
+		if err := viper.Unmarshal(Values); err != nil {
+			return ErrorUnmarshalConfig.Trace(err).Add("config", viper.AllSettings())
+		}
+	}
 
 	return nil
 }
