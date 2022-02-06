@@ -16,5 +16,11 @@ func initLogger() *trace.Error {
 	}
 
 	logrus.SetLevel(level)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceQuote:       true,
+		QuoteEmptyFields: true,
+		PadLevelText:     true,
+	})
+
 	return nil
 }

@@ -6,7 +6,6 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	trace "github.com/hans-m-song/go-stacktrace"
 	"github.com/last-second/services/lambda/handler_util"
 	"github.com/last-second/services/pkg/config"
@@ -15,27 +14,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var (
-	dbClient *dynamodb.Client
-)
-
 func init() {
 	logrus.Info("Initializing GetUser")
 	config.Init()
 
-	client, err := db.GetClient()
-	if err != nil {
+	if _, err := db.GetClient(); err != nil {
 		logrus.Fatal(trace.String(err))
 	}
-
-	dbClient = client
 }
 
-func handler(ctx context.Context,
+func handler(
+	ctx context.Context,
 	event events.APIGatewayProxyRequest,
 ) (
-	response events.APIGatewayProxyResponse,
-	err error,
+	events.APIGatewayProxyResponse,
+	error,
 ) {
 	logrus.Info("Executing GetUser")
 	logrus.Debugf("event: %+v", event)

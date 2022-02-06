@@ -2,7 +2,7 @@ module github.com/last-second/services
 
 go 1.17
 
-replace github.com/last-second/services => ./
+// replace github.com/last-second/services => ./
 
 require (
 	github.com/aws/aws-lambda-go v1.28.0
@@ -10,6 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.6.0
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.13.0
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/mux v1.8.0
 	github.com/hans-m-song/go-stacktrace v0.1.3
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.3.0

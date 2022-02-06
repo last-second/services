@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"encoding/json"
-	"fmt"
+	"net/http"
 
+	trace "github.com/hans-m-song/go-stacktrace"
+	"github.com/last-second/services/pkg/api"
 	"github.com/last-second/services/pkg/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -24,6 +25,7 @@ func runServe(cmd *cobra.Command, args []string) {
 	config.Init()
 	logrus.Info("starting serve")
 
-	j, _ := json.Marshal(config.Values)
-	fmt.Println(string(j))
+	if err := http.ListenAndServe(":8000", api.New()); err != nil {
+		logrus.Fatal(trace.New("ErrorApiRuntime").Trace(err))
+	}
 }

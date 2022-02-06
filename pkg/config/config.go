@@ -24,17 +24,11 @@ var (
 )
 
 func setFromEnvOrDefault(key, defaultValue string) {
-	value, ok := os.LookupEnv(key)
-
-	if !ok {
+	if value, ok := os.LookupEnv(key); ok && value != "" {
+		viper.SetDefault(key, value)
+	} else {
 		viper.SetDefault(key, defaultValue)
 	}
-
-	if len(value) < 1 {
-		viper.SetDefault(key, defaultValue)
-	}
-
-	viper.SetDefault(key, value)
 }
 
 type Config struct {
