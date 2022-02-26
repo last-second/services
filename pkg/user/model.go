@@ -20,14 +20,11 @@ var (
 )
 
 type User struct {
-	Id         string `json:"id"            dynamodbav:"id,          omitempty"`
-	Email      string `json:"email"         dynamodbav:"email,       omitempty"`
-	UserName   string `json:"user_name"     dynamodbav:"user_name,   omitempty"`
-	FirstName  string `json:"first_name"    dynamodbav:"first_name,  omitempty"`
-	MiddleName string `json:"middle_name"   dynamodbav:"middle_name, omitempty"`
-	LastName   string `json:"last_name"     dynamodbav:"last_name,   omitempty"`
-	CreatedAt  string `json:"created_at"    dynamodbav:"created_at,  omitempty"`
-	UpdatedAt  string `json:"updated_at"    dynamodbav:"updated_at,  omitempty"`
+	Id        string `json:"id"         dynamodbav:"id,         omitempty"`
+	Email     string `json:"email"      dynamodbav:"email,      omitempty"`
+	UserName  string `json:"user_name"  dynamodbav:"user_name,  omitempty"`
+	CreatedAt string `json:"created_at" dynamodbav:"created_at, omitempty"`
+	UpdatedAt string `json:"updated_at" dynamodbav:"updated_at, omitempty"`
 }
 
 // creates a new user with values set for id, createdAt, and updatedAt
@@ -49,13 +46,10 @@ func (user *User) MarshalAttributes() (map[string]types.AttributeValue, error) {
 // creates a new user with the given values,
 //
 // also includes values from `NewEmptyUser`
-func NewUser(userName, firstName, middleName, lastName string) *User {
+func NewUser(email, userName string) *User {
 	user := NewEmptyUser()
+	user.Email = email
 	user.UserName = userName
-	user.FirstName = firstName
-	user.MiddleName = middleName
-	user.LastName = lastName
-
 	return user
 }
 
