@@ -30,7 +30,7 @@ func GetUser(tableName string, user *User) (*User, error) {
 		return nil, err
 	}
 
-	item, err := user.MarshalAttributes()
+	item, err := user.MarshalAttributes(true)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,11 @@ func GetUser(tableName string, user *User) (*User, error) {
 
 	response, err := client.GetItem(context.TODO(), &getItemInput)
 	if err != nil {
-		return nil, ErrorGetUser.Trace(err).Add("GetItemInput", getItemInput)
+		return nil, ErrorGetUser.Trace(err).Add("getItemInput", getItemInput)
+	}
+
+	if len(response.Item) < 1 {
+		return nil, nil
 	}
 
 	result, err := UnmarshalAttributes(response.Item)
@@ -59,7 +63,7 @@ func CreateUser(tableName string, user *User) (*User, error) {
 		return nil, err
 	}
 
-	item, err := user.MarshalAttributes()
+	item, err := user.MarshalAttributes(false)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +75,7 @@ func CreateUser(tableName string, user *User) (*User, error) {
 
 	response, err := client.PutItem(context.TODO(), &putItemInput)
 	if err != nil {
-		return nil, ErrorPutUser.Trace(err).Add("PutItemInput", putItemInput)
+		return nil, ErrorPutUser.Trace(err).Add("putItemInput", putItemInput)
 	}
 
 	result, err := UnmarshalAttributes(response.Attributes)

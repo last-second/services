@@ -28,20 +28,14 @@ func serializeResponse(resp response) string {
 	return string(serialised)
 }
 
-func writeErrorResponse(rw http.ResponseWriter, code int, message string, errWrapper *trace.Error, err error) {
-	var traced *trace.Error
-	if err != nil {
-		traced = errWrapper.Trace(err)
-	} else {
-		traced = errWrapper.Tracef(message)
-	}
-
-	logrus.WithFields(logrus.Fields{"error": traced}).Error(message)
+func writeErrorResponse(rw http.ResponseWriter, code int, message string, err *trace.Error) {
+	logrus.WithField("error", err.Tracef(message)).Error("request failed")
 	rw.WriteHeader(code)
-	fmt.Fprint(rw, RespondWithError(errWrapper.Name, message))
+	fmt.Fprint(rw, RespondWithError(err.Name, message))
 }
 
 func writeSuccessResponse(rw http.ResponseWriter, data interface{}) {
+	logrus.WithField("data", data).Debug("request succeeded")
 	rw.WriteHeader(http.StatusOK)
 	fmt.Fprint(rw, RespondWithSuccess(data))
 }

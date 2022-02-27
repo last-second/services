@@ -39,8 +39,17 @@ func NewEmptyUser() *User {
 	}
 }
 
-func (user *User) MarshalAttributes() (map[string]types.AttributeValue, error) {
-	return attributevalue.MarshalMap(user)
+func (user *User) MarshalAttributes(omitempty bool) (map[string]types.AttributeValue, error) {
+	attrs, err := attributevalue.MarshalMap(user)
+	if err != nil {
+		return nil, ErrorMarshalUser.Trace(err).Add("user", user)
+	}
+
+	if !omitempty {
+		return attrs, nil
+	}
+
+	return db.FilterDynamodbAttributevalueMap(attrs), nil
 }
 
 // creates a new user with the given values,

@@ -18,6 +18,7 @@ var (
 
 var customResolver = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 	if c.Values.Stage == "local" && service == dynamodb.ServiceID {
+		logrus.Debug("rewriting service endpoint to local instance")
 		return aws.Endpoint{
 			PartitionID:   "aws",
 			URL:           "http://dynamodb:8000",
