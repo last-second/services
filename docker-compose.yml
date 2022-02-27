@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  services:
+    build: ./
+    environment:
+      AWS_ACCESS_KEY_ID: DUMMY
+      AWS_SECRET_ACCESS_KEY: DUMMY
+      AWS_PROFILE: DUMMY
+      AWS_REGION: ap-southeast-2
+      STAGE: local
+      USERTABLE_NAME: LastSecond-local-UserStack-UserTable
+    ports:
+      - 8000:8000
+
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath ./data
+    ports:
+      - 8001:8000
+    working_dir: /home/dynamodblocal
+    user: root
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+
+volumes:
+  dynamodb-data:

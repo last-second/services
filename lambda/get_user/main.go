@@ -30,8 +30,7 @@ func handler(
 	events.APIGatewayProxyResponse,
 	error,
 ) {
-	logrus.Info("Executing GetUser")
-	logrus.Debugf("event: %+v", event)
+	logrus.WithFields(handler_util.EventMeta(event)).Debug("Executing GetUser")
 
 	search, err := user.FromMap(event.QueryStringParameters)
 	if err != nil {

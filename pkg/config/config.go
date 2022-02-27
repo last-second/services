@@ -32,16 +32,11 @@ func setFromEnvOrDefault(key, defaultValue string) {
 }
 
 type Config struct {
-	// deployment
-
-	Loglevel string `mapstructure:"loglevel"`
-
-	// runtime
-
-	Stage         string `mapstructure:"stage"`
-	AwsProfile    string `mapstructure:"aws_profile"`
-	AwsRegion     string `mapstructure:"aws_region"`
-	UsertableName string `mapstructure:"usertable_name"`
+	Loglevel      string `json:"loglevel"       mapstructure:"loglevel"`
+	Stage         string `json:"stage"          mapstructure:"stage"`
+	AwsProfile    string `json:"aws_profile"    mapstructure:"aws_profile"`
+	AwsRegion     string `json:"aws_region"     mapstructure:"aws_region"`
+	UsertableName string `json:"usertable_name" mapstructure:"usertable_name"`
 }
 
 // Retrieves or instantiates singleton instance of config values

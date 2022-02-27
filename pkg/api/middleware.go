@@ -23,3 +23,11 @@ func loggingMiddlware(next http.Handler) http.Handler {
 		next.ServeHTTP(rw, r)
 	})
 }
+
+func defaultHeadersMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+
+		next.ServeHTTP(rw, r)
+	})
+}

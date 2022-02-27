@@ -65,19 +65,18 @@ func UnmarshalAttributes(attributes map[string]types.AttributeValue) (*User, err
 
 // unmarshals a raw value into a user and checks for required values
 func Parse(raw []byte) (*User, error) {
-	user := NewEmptyUser()
-
-	if err := json.Unmarshal(raw, &user); err != nil {
+	parsed := User{}
+	if err := json.Unmarshal(raw, &parsed); err != nil {
 		return nil, ErrorUnmarshalUserAttributes.Trace(err).Add("raw", raw)
 	}
 
 	missing := []string{}
 
-	if user.Email == "" {
+	if parsed.Email == "" {
 		missing = append(missing, "Email")
 	}
 
-	if user.UserName == "" {
+	if parsed.UserName == "" {
 		missing = append(missing, "UserName")
 	}
 
@@ -85,7 +84,7 @@ func Parse(raw []byte) (*User, error) {
 		return nil, ErrorMissingFields.Tracef("missing required field(s)").Add("fields", missing)
 	}
 
-	return user, nil
+	return &parsed, nil
 }
 
 func FromMap(values map[string]string) (*User, error) {

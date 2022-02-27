@@ -23,7 +23,7 @@ func init() {
 
 func runServe(cmd *cobra.Command, args []string) {
 	config.Init()
-	logrus.Info("starting serve")
+	logrus.WithField("config", config.Values).Info("starting serve")
 
 	if err := http.ListenAndServe(":8000", api.New()); err != nil {
 		logrus.Fatal(trace.New("ErrorApiRuntime").Trace(err))
