@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	ErrorPutUser    = trace.New("ErrorPutUser")
-	ErrorGetUser    = trace.New("ErrorGetUser")
-	ErrorListUser   = trace.New("ErrorListUser")
-	ErrorUpdateUser = trace.New("ErrorUpdateUser")
-	ErrorDeleteUser = trace.New("ErrorDeleteUser")
+	ErrorPutUser    = trace.New("ERROR_PUT_USER")
+	ErrorGetUser    = trace.New("ERROR_GET_USER")
+	ErrorListUser   = trace.New("ERROR_LIST_USER")
+	ErrorUpdateUser = trace.New("ERROR_UPDATE_USER")
+	ErrorDeleteUser = trace.New("ERROR_DELETE_USER")
 )
 
 func ListUsers() {

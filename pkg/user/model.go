@@ -7,16 +7,17 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	trace "github.com/hans-m-song/go-stacktrace"
+	"github.com/last-second/services/pkg/db"
 
 	"github.com/google/uuid"
 )
 
 var (
-	ErrorUnmarshalUserAttributes = trace.New("ErrorUnmarshalUserAttributes")
-	ErrorMarshalUserAttributes   = trace.New("ErrorMarshalUserAttributes")
-	ErrorUnmarshalUser           = trace.New("ErrorUnmarshalUser")
-	ErrorMarshalUser             = trace.New("ErrorMarshalUser")
-	ErrorMissingFields           = trace.New("ErrorMissingFields")
+	ErrorUnmarshalUserAttributes = trace.New("ERROR_UNMARSHAL_USER_ATTRIBUTES")
+	ErrorMarshalUserAttributes   = trace.New("ERROR_MARSHAL_USER_ATTRIBUTES")
+	ErrorUnmarshalUser           = trace.New("ERROR_UNMARSHAL_USER")
+	ErrorMarshalUser             = trace.New("ERROR_MARSHAL_USER")
+	ErrorMissingFields           = trace.New("ERROR_MISSING_FIELDS")
 )
 
 type User struct {

@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	ErrorParseLevel      = trace.New("ErrorParseLevel")
+	ErrorParseLevel      = trace.New("ERROR_PARSE_LEVEL")
 	defaultJsonFormatter = logrus.JSONFormatter{}
 	defaultTextFormatter = logrus.TextFormatter{
 		ForceQuote:             true,

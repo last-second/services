@@ -11,8 +11,8 @@ import (
 var (
 	Values *Config
 
-	ErrorReadConfig      = trace.New("ErrorReadConfig")
-	ErrorUnmarshalConfig = trace.New("ErrorUnmarshalConfig")
+	ErrorReadConfig      = trace.New("ERROR_READ_CONFIG")
+	ErrorUnmarshalConfig = trace.New("ERROR_UNMARSHAL_CONFIG")
 
 	envDefaults = map[string]string{
 		"LOGLEVEL":       "debug",

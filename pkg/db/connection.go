@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	ErrorGettingConfig = trace.New("ErrorGettingConfig")
+	ErrorGettingConfig = trace.New("ERROR_GETTING_CONFIG")
 	client             *dynamodb.Client
 )
 

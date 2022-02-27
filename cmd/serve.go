@@ -10,12 +10,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var serveCmd = &cobra.Command{
-	Use:   "serve",
-	Short: "Runs the server that provides an interface to a local instance of the database",
-	Long:  "Runs the server that provides an interface to a local instance of the database",
-	Run:   runServe,
-}
+var (
+	ErrorApiRuntime = trace.New("ERROR_API_RUNTIME")
+	serveCmd        = &cobra.Command{
+		Use:   "serve",
+		Short: "Runs the server that provides an interface to a local instance of the database",
+		Long:  "Runs the server that provides an interface to a local instance of the database",
+		Run:   runServe,
+	}
+)
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
@@ -26,6 +29,6 @@ func runServe(cmd *cobra.Command, args []string) {
 	logrus.WithField("config", config.Values).Info("starting serve")
 
 	if err := http.ListenAndServe(":8000", api.New()); err != nil {
-		logrus.Fatal(trace.New("ErrorApiRuntime").Trace(err))
+		logrus.Fatal(ErrorApiRuntime.Trace(err))
 	}
 }

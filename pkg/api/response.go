@@ -16,11 +16,11 @@ type response struct {
 }
 
 var (
-	ErrInvalidQuery = trace.New("ErrInvalidQuery")
-	ErrInvalidBody  = trace.New("ErrInvalidBody")
-	ErrParseBody    = trace.New("ErrParseBody")
-	ErrCreateUser   = trace.New("ErrCreateUser")
-	ErrNotFound     = trace.New("ErrNotFound")
+	ErrorInvalidQuery = trace.New("ERROR_INVALID_QUERY")
+	ErrorInvalidBody  = trace.New("ERROR_INVALID_BODY")
+	ErrorParseBody    = trace.New("ERROR_PARSE_BODY")
+	ErrorCreateUser   = trace.New("ERROR_CREATE_USER")
+	ErrorNotFound     = trace.New("ERROR_NOT_FOUND")
 )
 
 func serializeResponse(resp response) string {
