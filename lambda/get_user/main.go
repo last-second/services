@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"encoding/json"
+	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	trace "github.com/hans-m-song/go-stacktrace"
 	"github.com/last-second/services/lambda/handler_util"
+	"github.com/last-second/services/pkg/api"
 	"github.com/last-second/services/pkg/config"
 	"github.com/last-second/services/pkg/db"
 	"github.com/last-second/services/pkg/user"
@@ -32,24 +33,21 @@ func handler(
 ) {
 	logrus.WithFields(handler_util.EventMeta(event)).Debug("Executing GetUser")
 
-	search, err := user.FromMap(event.QueryStringParameters)
-	if err != nil {
-		return handler_util.RespondWithError(err), err
+	id, ok := event.QueryStringParameters["id"]
+	if !ok {
+		return handler_util.RespondWithError(http.StatusBadRequest, api.ErrorInvalidQuery, "A user id is required")
 	}
 
-	logrus.Debugf("query: %+v", search)
-	resp, err := user.GetUser(config.Values.UsertableName, search)
+	foundUser, err := user.GetUser(config.Values.UsertableName, &user.User{Id: id})
 	if err != nil {
-		return handler_util.RespondWithError(err), err
+		return handler_util.RespondWithError(http.StatusBadRequest, err, "Could not get user")
 	}
 
-	serialised, err := json.Marshal(resp)
-	if err != nil {
-		return handler_util.RespondWithError(err), err
+	if foundUser == nil {
+		return handler_util.RespondWithError(http.StatusNotFound, err, "Could not find matching user")
 	}
 
-	logrus.Debugf("%+v", resp)
-	return handler_util.RespondWithSuccess(string(serialised)), nil
+	return handler_util.RespondWithSuccess(foundUser)
 }
 
 func main() {
