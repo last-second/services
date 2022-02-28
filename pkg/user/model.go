@@ -80,21 +80,25 @@ func Parse(raw []byte) (*User, error) {
 		return nil, ErrorUnmarshalUserAttributes.Trace(err).Add("raw", raw)
 	}
 
+	return &parsed, nil
+}
+
+func EnsureFields(user *User) error {
 	missing := []string{}
 
-	if parsed.Email == "" {
+	if user.Email == "" {
 		missing = append(missing, "Email")
 	}
 
-	if parsed.UserName == "" {
+	if user.UserName == "" {
 		missing = append(missing, "UserName")
 	}
 
 	if len(missing) > 0 {
-		return nil, ErrorMissingFields.Tracef("missing required field(s)").Add("fields", missing)
+		return ErrorMissingFields.Tracef("missing required field(s)").Add("fields", missing)
 	}
 
-	return &parsed, nil
+	return nil
 }
 
 func FromMap(values map[string]string) (*User, error) {

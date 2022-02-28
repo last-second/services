@@ -16,6 +16,7 @@ func New() *mux.Router {
 	// user
 	r.HandleFunc("/api/v1/user", createUser).Methods(http.MethodPost)
 	r.HandleFunc("/api/v1/user", getUser).Methods(http.MethodGet)
+	r.HandleFunc("/api/v1/user", updateUser).Methods(http.MethodPatch)
 
 	return r
 }
