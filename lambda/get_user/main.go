@@ -19,7 +19,7 @@ func init() {
 	logrus.Info("Initializing GetUser")
 	config.Init()
 
-	if _, err := db.GetClient(); err != nil {
+	if _, err := db.GetClient(context.Background()); err != nil {
 		logrus.Fatal(trace.String(err))
 	}
 }
@@ -38,7 +38,7 @@ func handler(
 		return handler_util.RespondWithError(http.StatusBadRequest, api.ErrorInvalidQuery, "A user id is required")
 	}
 
-	foundUser, err := user.GetUser(config.Values.UsertableName, &user.User{Id: id})
+	foundUser, err := user.GetUser(ctx, config.Values.UsertableName, &user.User{Id: id})
 	if err != nil {
 		return handler_util.RespondWithError(http.StatusBadRequest, err, "Could not get user")
 	}

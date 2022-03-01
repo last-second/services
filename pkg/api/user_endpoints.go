@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"io"
 	"net/http"
 
@@ -29,7 +30,7 @@ func createUser(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser := user.NewUser(partialUser.Email, partialUser.UserName)
-	createdUser, err := user.CreateUser(config.Values.UsertableName, newUser)
+	createdUser, err := user.CreateUser(context.TODO(), config.Values.UsertableName, newUser)
 	if err != nil {
 		traced := trace.Guarantee(err).Add("user", newUser)
 		writeErrorResponse(rw, http.StatusInternalServerError, traced.Message, traced)
@@ -46,7 +47,7 @@ func getUser(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	searchUser := &user.User{Id: r.URL.Query().Get("id")}
-	foundUser, err := user.GetUser(config.Values.UsertableName, searchUser)
+	foundUser, err := user.GetUser(context.TODO(), config.Values.UsertableName, searchUser)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusInternalServerError, "Error searching for user", trace.Guarantee(err).Add("user", searchUser))
 		return
@@ -78,7 +79,7 @@ func updateUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updatedUser, err := user.UpdateUser(config.Values.UsertableName, partialUser)
+	updatedUser, err := user.UpdateUser(context.TODO(), config.Values.UsertableName, partialUser)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusInternalServerError, "Error updating user", trace.Guarantee(err).Add("user", partialUser))
 		return

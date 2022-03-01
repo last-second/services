@@ -20,7 +20,7 @@ func init() {
 	logrus.Info("Initializing GetUser")
 	config.Init()
 
-	if _, err := db.GetClient(); err != nil {
+	if _, err := db.GetClient(context.Background()); err != nil {
 		logrus.Fatal(trace.String(err))
 	}
 }
@@ -43,7 +43,7 @@ func handler(
 		return handler_util.RespondWithError(http.StatusBadRequest, api.ErrorInvalidBody.Add("user", partialUser), "Must specify Id and optionally email and user_name when updating a user")
 	}
 
-	updatedUser, err := user.UpdateUser(config.Values.UsertableName, &partialUser)
+	updatedUser, err := user.UpdateUser(ctx, config.Values.UsertableName, &partialUser)
 	if err != nil {
 		return handler_util.RespondWithError(http.StatusInternalServerError, trace.Guarantee(err).Add("user", partialUser), "Error updating user")
 	}

@@ -16,8 +16,8 @@ var (
 	ErrorUpdateUser = trace.New("ERROR_UPDATE_USER")
 )
 
-func GetUser(tableName string, user *User) (*User, error) {
-	client, err := db.GetClient()
+func GetUser(ctx context.Context, tableName string, user *User) (*User, error) {
+	client, err := db.GetClient(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func GetUser(tableName string, user *User) (*User, error) {
 		Key:       item,
 	}
 
-	response, err := client.GetItem(context.TODO(), &getItemInput)
+	response, err := client.GetItem(ctx, &getItemInput)
 	if err != nil {
 		return nil, ErrorGetUser.Trace(err).
 			Add("tableName", *getItemInput.TableName).
@@ -55,8 +55,8 @@ func GetUser(tableName string, user *User) (*User, error) {
 	return result, nil
 }
 
-func CreateUser(tableName string, user *User) (*User, error) {
-	client, err := db.GetClient()
+func CreateUser(ctx context.Context, tableName string, user *User) (*User, error) {
+	client, err := db.GetClient(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func CreateUser(tableName string, user *User) (*User, error) {
 		Item:      item,
 	}
 
-	response, err := client.PutItem(context.TODO(), &putItemInput)
+	response, err := client.PutItem(ctx, &putItemInput)
 	if err != nil {
 		return nil, ErrorCreateUser.Trace(err).
 			Add("tableName", *putItemInput.TableName).
@@ -86,19 +86,21 @@ func CreateUser(tableName string, user *User) (*User, error) {
 	return result, nil
 }
 
-func UpdateUser(tableName string, user *User) (*User, error) {
-	client, err := db.GetClient()
+func UpdateUser(ctx context.Context, tableName string, user *User) (*User, error) {
+	client, err := db.GetClient(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	updateExpression := "SET updated_at=:updated_at"
 	updateValues := map[string]types.AttributeValue{":updated_at": &types.AttributeValueMemberS{Value: time.Now().UTC().Format(time.RFC3339)}}
-	if len(user.Email) > 0 {
+
+	if user.Email != "" {
 		updateExpression += ", email=:email"
 		updateValues[":email"] = &types.AttributeValueMemberS{Value: user.Email}
 	}
-	if len(user.UserName) > 0 {
+
+	if user.UserName != "" {
 		updateExpression += ", user_name=:user_name"
 		updateValues[":user_name"] = &types.AttributeValueMemberS{Value: user.UserName}
 	}
@@ -111,7 +113,7 @@ func UpdateUser(tableName string, user *User) (*User, error) {
 		ExpressionAttributeValues: updateValues,
 	}
 
-	response, err := client.UpdateItem(context.TODO(), &updateItemInput)
+	response, err := client.UpdateItem(ctx, &updateItemInput)
 	if err != nil {
 		return nil, ErrorUpdateUser.Trace(err).
 			Add("tableName", *updateItemInput.TableName).

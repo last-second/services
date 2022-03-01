@@ -19,8 +19,8 @@ func TestEnsureCreationAttributesEmptyUser(t *testing.T) {
 
 	err := mockUser.EnsureCreationAttributes()
 	meta := trace.Guarantee(err).Meta
-	assert := test.Assert{T: t}
 
+	assert := test.Assert{T: t}
 	assert.MapHasKey(meta, "fields")
 	assert.IsString(meta["fields"])
 	assert.MatchesString(meta["fields"].(string), "[Email UserName]")
@@ -37,8 +37,8 @@ func TestEnsureCreationAttributesPartialUser(t *testing.T) {
 
 	err := mockUser.EnsureCreationAttributes()
 	meta := trace.Guarantee(err).Meta
-	assert := test.Assert{T: t}
 
+	assert := test.Assert{T: t}
 	assert.MapHasKey(meta, "fields")
 	assert.IsString(meta["fields"])
 	assert.MatchesString(meta["fields"].(string), "[UserName]")
@@ -54,7 +54,7 @@ func TestEnsureCreationAttributesCompleteUser(t *testing.T) {
 	}
 
 	err := mockUser.EnsureCreationAttributes()
-	assert := test.Assert{T: t}
 
+	assert := test.Assert{T: t}
 	assert.ErrorIsNil(err)
 }

@@ -30,14 +30,14 @@ var customResolver = aws.EndpointResolverWithOptionsFunc(func(service, region st
 })
 
 // Singleton client getter
-func GetClient() (*dynamodb.Client, error) {
+func GetClient(ctx context.Context) (*dynamodb.Client, error) {
 	if client != nil {
 		return client, nil
 	}
 
 	logrus.Info("getting aws sdk configuration")
 	cfg, err := config.LoadDefaultConfig(
-		context.TODO(),
+		ctx,
 		config.WithEndpointResolverWithOptions(customResolver),
 	)
 

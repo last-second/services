@@ -20,7 +20,7 @@ func init() {
 	logrus.Info("Initializing GetUser")
 	config.Init()
 
-	if _, err := db.GetClient(); err != nil {
+	if _, err := db.GetClient(context.Background()); err != nil {
 		logrus.Fatal(trace.String(err))
 	}
 }
@@ -43,7 +43,7 @@ func handler(
 		return handler_util.RespondWithError(http.StatusBadRequest, err, "Can only specify email and user_name when creating a user")
 	}
 
-	createdUser, err := user.CreateUser(config.Values.UsertableName, &partialUser)
+	createdUser, err := user.CreateUser(ctx, config.Values.UsertableName, &partialUser)
 	if err != nil {
 		return handler_util.RespondWithError(http.StatusInternalServerError, trace.Guarantee(err).Add("user", partialUser), "Error creating user")
 	}
