@@ -19,7 +19,8 @@ var (
 		"STAGE":          "dev",
 		"AWS_PROFILE":    "",
 		"AWS_REGION":     "",
-		"USERTABLE_NAME": "",
+		"USERTABLE_NAME": "LastSecond-local-UserStack-UserTable",
+		"TASKTABLE_NAME": "LastSecond-local-TaskStack-TaskTable",
 	}
 )
 
@@ -37,6 +38,7 @@ type Config struct {
 	AwsProfile    string `json:"aws_profile"    mapstructure:"aws_profile"`
 	AwsRegion     string `json:"aws_region"     mapstructure:"aws_region"`
 	UsertableName string `json:"usertable_name" mapstructure:"usertable_name"`
+	TasktableName string `json:"tasktable_name" mapstructure:"tasktable_name"`
 }
 
 // Retrieves or instantiates singleton instance of config values

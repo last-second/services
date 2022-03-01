@@ -17,7 +17,7 @@ var (
 	ErrorMarshalUserAttributes   = trace.New("ERROR_MARSHAL_USER_ATTRIBUTES")
 	ErrorUnmarshalUser           = trace.New("ERROR_UNMARSHAL_USER")
 	ErrorMarshalUser             = trace.New("ERROR_MARSHAL_USER")
-	ErrorUserFields              = trace.New("ERROR_MISSING_USER_FIELDS")
+	ErrorUserFields              = trace.New("ERROR_USER_FIELDS")
 )
 
 type User struct {
