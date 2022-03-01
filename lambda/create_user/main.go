@@ -39,8 +39,8 @@ func handler(
 		return handler_util.RespondWithError(http.StatusBadRequest, api.ErrorInvalidBody.Add("body", event.Body).Trace(err), "Could not parse body")
 	}
 
-	if partialUser.Id != "" || partialUser.CreatedAt != "" || partialUser.UpdatedAt != "" {
-		return handler_util.RespondWithError(http.StatusBadRequest, api.ErrorInvalidBody.Add("user", partialUser), "Can only specify email and user_name when creating a user")
+	if err := partialUser.EnsureCreationAttributes(); err != nil {
+		return handler_util.RespondWithError(http.StatusBadRequest, err, "Can only specify email and user_name when creating a user")
 	}
 
 	createdUser, err := user.CreateUser(config.Values.UsertableName, &partialUser)

@@ -17,7 +17,7 @@ var (
 	ErrorMarshalUserAttributes   = trace.New("ERROR_MARSHAL_USER_ATTRIBUTES")
 	ErrorUnmarshalUser           = trace.New("ERROR_UNMARSHAL_USER")
 	ErrorMarshalUser             = trace.New("ERROR_MARSHAL_USER")
-	ErrorMissingFields           = trace.New("ERROR_MISSING_FIELDS")
+	ErrorUserFields              = trace.New("ERROR_MISSING_USER_FIELDS")
 )
 
 type User struct {
@@ -26,18 +26,6 @@ type User struct {
 	UserName  string `json:"user_name"  dynamodbav:"user_name,  omitempty"`
 	CreatedAt string `json:"created_at" dynamodbav:"created_at, omitempty"`
 	UpdatedAt string `json:"updated_at" dynamodbav:"updated_at, omitempty"`
-}
-
-// creates a new user with values set for id, createdAt, and updatedAt
-func NewEmptyUser() *User {
-	now := time.Now().UTC().Format(time.RFC3339)
-	id := uuid.NewString()
-
-	return &User{
-		Id:        id,
-		CreatedAt: now,
-		UpdatedAt: now,
-	}
 }
 
 func (user *User) MarshalAttributes(omitempty bool) (map[string]types.AttributeValue, error) {
@@ -51,6 +39,54 @@ func (user *User) MarshalAttributes(omitempty bool) (map[string]types.AttributeV
 	}
 
 	return db.FilterDynamodbAttributevalueMap(attrs), nil
+}
+
+func (user *User) EnsureCreationAttributes() error {
+	required := []string{}
+
+	if user.Email == "" {
+		required = append(required, "Email")
+	}
+
+	if user.UserName == "" {
+		required = append(required, "UserName")
+	}
+
+	if len(required) > 0 {
+		return ErrorUserFields.Tracef("missing required field(s)").Add("fields", required)
+	}
+
+	disallowed := []string{}
+
+	if user.Id != "" {
+		disallowed = append(disallowed, "Id")
+	}
+
+	if user.CreatedAt != "" {
+		disallowed = append(disallowed, "CreatedAt")
+	}
+
+	if user.UpdatedAt != "" {
+		disallowed = append(disallowed, "UpdatedAt")
+	}
+
+	if len(disallowed) > 0 {
+		return ErrorUserFields.Tracef("must not specify field(s)").Add("fields", disallowed)
+	}
+
+	return nil
+}
+
+// creates a new user with values set for id, createdAt, and updatedAt
+func NewEmptyUser() *User {
+	now := time.Now().UTC().Format(time.RFC3339)
+	id := uuid.NewString()
+
+	return &User{
+		Id:        id,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
 }
 
 // creates a new user with the given values,
@@ -74,40 +110,11 @@ func UnmarshalAttributes(attributes map[string]types.AttributeValue) (*User, err
 }
 
 // unmarshals a raw value into a user and checks for required values
-func Parse(raw []byte) (*User, error) {
+func Unmarshal(raw []byte) (*User, error) {
 	parsed := User{}
 	if err := json.Unmarshal(raw, &parsed); err != nil {
-		return nil, ErrorUnmarshalUserAttributes.Trace(err).Add("raw", raw)
+		return nil, ErrorUnmarshalUser.Trace(err).Add("raw", raw)
 	}
 
 	return &parsed, nil
-}
-
-func EnsureFields(user *User) error {
-	missing := []string{}
-
-	if user.Email == "" {
-		missing = append(missing, "Email")
-	}
-
-	if user.UserName == "" {
-		missing = append(missing, "UserName")
-	}
-
-	if len(missing) > 0 {
-		return ErrorMissingFields.Tracef("missing required field(s)").Add("fields", missing)
-	}
-
-	return nil
-}
-
-func FromMap(values map[string]string) (*User, error) {
-	serialised, err := json.Marshal(values)
-	if err != nil {
-		return nil, ErrorMarshalUser.Trace(err).Add("values", values)
-	}
-
-	result := User{}
-	json.Unmarshal(serialised, &result)
-	return &result, nil
 }

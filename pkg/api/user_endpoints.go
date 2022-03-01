@@ -7,45 +7,36 @@ import (
 	trace "github.com/hans-m-song/go-stacktrace"
 	"github.com/last-second/services/pkg/config"
 	"github.com/last-second/services/pkg/user"
-	"github.com/sirupsen/logrus"
 )
 
 func createUser(rw http.ResponseWriter, r *http.Request) {
-	if r.ContentLength < 1 {
-		writeErrorResponse(rw, http.StatusBadRequest, "Body cannot be empty", ErrorInvalidBody)
-		return
-	}
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusInternalServerError, "Body could not be read", trace.Guarantee(err).Add("body", body))
 		return
 	}
 
-	partialUser, err := user.Parse(body)
+	partialUser, err := user.Unmarshal(body)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusInternalServerError, "Body could not be unmarshalled into a user struct", trace.Guarantee(err).Add("body", body))
 		return
 	}
 
-	if err := user.EnsureFields(partialUser); err != nil {
-		writeErrorResponse(rw, http.StatusInternalServerError, "User is missing required fields", trace.Guarantee(err).Add("user", partialUser))
-		return
-	}
-
-	if partialUser.Id != "" || partialUser.CreatedAt != "" || partialUser.UpdatedAt != "" {
-		writeErrorResponse(rw, http.StatusBadRequest, "Can only specify email and user_name when creating a user", ErrorInvalidBody.Add("user", partialUser))
+	if err := partialUser.EnsureCreationAttributes(); err != nil {
+		traced := trace.Guarantee(err).Add("user", partialUser)
+		writeErrorResponse(rw, http.StatusInternalServerError, traced.Message, traced)
 		return
 	}
 
 	newUser := user.NewUser(partialUser.Email, partialUser.UserName)
-	logrus.WithField("user", newUser).Debug("creating user")
-	if _, err := user.CreateUser(config.Values.UsertableName, newUser); err != nil {
-		writeErrorResponse(rw, http.StatusInternalServerError, "Could not create user", trace.Guarantee(err).Add("user", newUser))
+	createdUser, err := user.CreateUser(config.Values.UsertableName, newUser)
+	if err != nil {
+		traced := trace.Guarantee(err).Add("user", newUser)
+		writeErrorResponse(rw, http.StatusInternalServerError, traced.Message, traced)
 		return
 	}
 
-	writeSuccessResponse(rw, newUser)
+	writeSuccessResponse(rw, createdUser)
 }
 
 func getUser(rw http.ResponseWriter, r *http.Request) {
@@ -70,18 +61,13 @@ func getUser(rw http.ResponseWriter, r *http.Request) {
 }
 
 func updateUser(rw http.ResponseWriter, r *http.Request) {
-	if r.ContentLength < 1 {
-		writeErrorResponse(rw, http.StatusBadRequest, "Body cannot be empty", ErrorInvalidBody)
-		return
-	}
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusInternalServerError, "Body could not be read", trace.Guarantee(err).Add("body", body))
 		return
 	}
 
-	partialUser, err := user.Parse(body)
+	partialUser, err := user.Unmarshal(body)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusInternalServerError, "Body could not be unmarshalled into a user struct", trace.Guarantee(err).Add("body", body))
 		return
