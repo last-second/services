@@ -5,19 +5,25 @@ go 1.17
 // replace github.com/last-second/services => ./
 
 require (
+	github.com/aws/aws-cdk-go/awscdk v1.147.0-devpreview
+	github.com/aws/aws-cdk-go/awscdk/v2 v2.15.0
 	github.com/aws/aws-lambda-go v1.28.0
 	github.com/aws/aws-sdk-go-v2/config v1.13.0
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.6.0
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.13.0
+	github.com/aws/constructs-go/constructs/v10 v10.0.80
+	github.com/aws/constructs-go/constructs/v3 v3.3.235
+	github.com/aws/jsii-runtime-go v1.54.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
-	github.com/hans-m-song/go-stacktrace v0.1.8
+	github.com/hans-m-song/go-stacktrace v0.1.9
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.1
 )
 
 require (
+	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.13.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.8.0 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.10.0 // indirect

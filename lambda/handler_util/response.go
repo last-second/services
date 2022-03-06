@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambdacontext"
 	trace "github.com/hans-m-song/go-stacktrace"
 	"github.com/last-second/services/pkg/api"
 	"github.com/sirupsen/logrus"
@@ -12,8 +11,7 @@ import (
 
 func headers() map[string]string {
 	return map[string]string{
-		"X-Lambda-Name": lambdacontext.FunctionName,
-		"Content-Type":  "application/json",
+		"Content-Type": "application/json",
 	}
 }
 

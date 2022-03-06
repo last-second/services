@@ -44,7 +44,7 @@ func handler(
 	}
 
 	if foundUser == nil {
-		return handler_util.RespondWithError(http.StatusNotFound, err, "Could not find matching user")
+		return handler_util.RespondWithError(http.StatusNotFound, api.ErrorNotFound, "Could not find matching user")
 	}
 
 	return handler_util.RespondWithSuccess(foundUser)

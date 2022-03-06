@@ -49,6 +49,8 @@ dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
+github.com/Masterminds/semver/v3 v3.1.1 h1:hLg3sBzpNErnxhQtUy/mmLR2I9foDujNK030IGemrRc=
+github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -60,6 +62,10 @@ github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmV
 github.com/armon/go-metrics v0.3.10/go.mod h1:4O98XIr/9W0sxpJ8UaYkvjk10Iff7SnFrb4QAOwNTFc=
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/armon/go-radix v1.0.0/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
+github.com/aws/aws-cdk-go/awscdk v1.147.0-devpreview h1:/QhbUC2OTPMugkY+UtwUCv2EW95a821G/F6S3EpCC7Q=
+github.com/aws/aws-cdk-go/awscdk v1.147.0-devpreview/go.mod h1:7RKOEfBvURXJSxVTg2pZsBwnGlLjbZB4wNTZYhgQVU0=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.15.0 h1:KaNNLKo6JZ63ccfMQq1Dp3AXf/qAD0YKMWQ470Eatj8=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.15.0/go.mod h1:EBLkGLkGx7DGQHTqth6V+0STQVzJbkrC7WlIQvy54Vs=
 github.com/aws/aws-lambda-go v1.28.0 h1:fZiik1PZqW2IyAN4rj+Y0UBaO1IDFlsNo9Zz/XnArK4=
 github.com/aws/aws-lambda-go v1.28.0/go.mod h1:jJmlefzPfGnckuHdXX7/80O3BvUUi12XOkbv4w9SGLU=
 github.com/aws/aws-sdk-go-v2 v1.13.0 h1:1XIXAfxsEmbhbj5ry3D3vX+6ZcUYvIqSm4CWWEuGZCA=
@@ -92,6 +98,15 @@ github.com/aws/aws-sdk-go-v2/service/sso v1.9.0 h1:1qLJeQGBmNQW3mBNzK2CFmrQNmoXW
 github.com/aws/aws-sdk-go-v2/service/sso v1.9.0/go.mod h1:vCV4glupK3tR7pw7ks7Y4jYRL86VvxS+g5qk04YeWrU=
 github.com/aws/aws-sdk-go-v2/service/sts v1.14.0 h1:ksiDXhvNYg0D2/UFkLejsaz3LqpW5yjNQ8Nx9Sn2c0E=
 github.com/aws/aws-sdk-go-v2/service/sts v1.14.0/go.mod h1:u0xMJKDvvfocRjiozsoZglVNXRG19043xzp3r2ivLIk=
+github.com/aws/constructs-go/constructs/v10 v10.0.9/go.mod h1:RC6w8bOwxLmPX7Jfo9dkEZ9iVfgH4QnaVnfWvaNOHy0=
+github.com/aws/constructs-go/constructs/v10 v10.0.80 h1:uDzfDQvEcFB/6Z/CxRxDeJT8nOrlhUW5fY6qVTCNcbU=
+github.com/aws/constructs-go/constructs/v10 v10.0.80/go.mod h1:GZBESc5AgkWinpmhyUshXpjC4exarZDYwcl5u6mvYF0=
+github.com/aws/constructs-go/constructs/v3 v3.3.225/go.mod h1:tLZgYT2LxttX7vn2MkqDI/oXP3Kno4obsg6hN4ShfuA=
+github.com/aws/constructs-go/constructs/v3 v3.3.235 h1:PGKsIrwx3xPkPJMGc0TnHZyVOSpPlFyMdP/xPc8mYVc=
+github.com/aws/constructs-go/constructs/v3 v3.3.235/go.mod h1:tLZgYT2LxttX7vn2MkqDI/oXP3Kno4obsg6hN4ShfuA=
+github.com/aws/jsii-runtime-go v1.37.0/go.mod h1:6tZnlstx8bAB3vnLFF9n8bbkI//LDblAek9zFyMXV3E=
+github.com/aws/jsii-runtime-go v1.54.0 h1:u0Yj9vhaTiyUnKT2zPFx67Q1fXWAAtk45hBhVRK+GXE=
+github.com/aws/jsii-runtime-go v1.54.0/go.mod h1:9htokR2a9XpRcbNf3fwqPaTs0CpC3KJCOUDMMJvEgZQ=
 github.com/aws/smithy-go v1.10.0 h1:gsoZQMNHnX+PaghNw4ynPsyGP7aUCqx5sY2dlPQsZ0w=
 github.com/aws/smithy-go v1.10.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
@@ -232,8 +247,8 @@ github.com/googleapis/gax-go/v2 v2.1.1/go.mod h1:hddJymUZASv3XPyGkUpKj8pPO47Rmb0
 github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
-github.com/hans-m-song/go-stacktrace v0.1.8 h1:mNaSXUBkoChnP/5FQ1lGPhsd0wFCtH7jSKnI9Isjz0M=
-github.com/hans-m-song/go-stacktrace v0.1.8/go.mod h1:six5qboImcz1SbIboKAzbTIjhR6Fp5vn86hs2k7ziNw=
+github.com/hans-m-song/go-stacktrace v0.1.9 h1:53TZTJwXxo3rnGv7bnvbnKHkVjIapUBuPVA2QaDFQ3s=
+github.com/hans-m-song/go-stacktrace v0.1.9/go.mod h1:six5qboImcz1SbIboKAzbTIjhR6Fp5vn86hs2k7ziNw=
 github.com/hashicorp/consul/api v1.11.0/go.mod h1:XjsvQN+RJGWI2TWy1/kqaE16HrR2J/FWgkYjdZQsX9M=
 github.com/hashicorp/consul/api v1.12.0/go.mod h1:6pVBMo0ebnYdt2S3H87XhekM/HHrUoTD2XXb/VrZVy0=
 github.com/hashicorp/consul/sdk v0.8.0/go.mod h1:GBvyrGALthsZObzUGsfgHZQDXjg4lOjagTIwIR1vPms=
