@@ -22,3 +22,10 @@ vendor
 
 # Build artifacts
 last-second-*
+
+# Infrastructure
+node_modules
+cdk.out
+yarn.lock
+.sst
+.build

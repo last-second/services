@@ -1,0 +1,5 @@
+{
+  "name": "last-second",
+  "region": "ap-southeast-2",
+  "main": "stacks/index.ts"
+}
