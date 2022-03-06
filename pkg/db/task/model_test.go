@@ -4,7 +4,8 @@ import (
 	"testing"
 
 	trace "github.com/hans-m-song/go-stacktrace"
-	"github.com/last-second/services/pkg/task"
+	"github.com/last-second/services/pkg/db"
+	"github.com/last-second/services/pkg/db/task"
 	"github.com/last-second/services/pkg/test"
 )
 
@@ -22,7 +23,7 @@ func TestEnsureFieldsEmptyTask(t *testing.T) {
 		UpdatedAt:     "",
 	}
 
-	err := mockTask.EnsureCreationAttributes()
+	err := mockTask.EnsureAttributes(db.CreateAction)
 	meta := trace.Guarantee(err).Meta
 
 	assert := test.Assert{T: t}
@@ -45,7 +46,7 @@ func TestEnsureFieldsPartialTask(t *testing.T) {
 		UpdatedAt:     "",
 	}
 
-	err := mockTask.EnsureCreationAttributes()
+	err := mockTask.EnsureAttributes(db.CreateAction)
 	meta := trace.Guarantee(err).Meta
 
 	assert := test.Assert{T: t}
@@ -68,7 +69,7 @@ func TestEnsureFieldsFrequencyTypeIsNotNever(t *testing.T) {
 		UpdatedAt:     "",
 	}
 
-	err := mockTask.EnsureCreationAttributes()
+	err := mockTask.EnsureAttributes(db.CreateAction)
 	meta := trace.Guarantee(err).Meta
 
 	assert := test.Assert{T: t}
@@ -91,7 +92,7 @@ func TestEnsureFieldsFrequencyTypeIsNever(t *testing.T) {
 		UpdatedAt:     "",
 	}
 
-	err := mockTask.EnsureCreationAttributes()
+	err := mockTask.EnsureAttributes(db.CreateAction)
 
 	assert := test.Assert{T: t}
 	assert.ErrorIsNil(err)

@@ -4,8 +4,9 @@ import (
 	"testing"
 
 	trace "github.com/hans-m-song/go-stacktrace"
+	"github.com/last-second/services/pkg/db"
+	"github.com/last-second/services/pkg/db/user"
 	"github.com/last-second/services/pkg/test"
-	"github.com/last-second/services/pkg/user"
 )
 
 func TestEnsureCreationAttributesEmptyUser(t *testing.T) {
@@ -17,7 +18,7 @@ func TestEnsureCreationAttributesEmptyUser(t *testing.T) {
 		UpdatedAt: "",
 	}
 
-	err := mockUser.EnsureCreationAttributes()
+	err := mockUser.EnsureAttributes(db.CreateAction)
 	meta := trace.Guarantee(err).Meta
 
 	assert := test.Assert{T: t}
@@ -35,7 +36,7 @@ func TestEnsureCreationAttributesPartialUser(t *testing.T) {
 		UpdatedAt: "",
 	}
 
-	err := mockUser.EnsureCreationAttributes()
+	err := mockUser.EnsureAttributes(db.CreateAction)
 	meta := trace.Guarantee(err).Meta
 
 	assert := test.Assert{T: t}
@@ -53,7 +54,7 @@ func TestEnsureCreationAttributesCompleteUser(t *testing.T) {
 		UpdatedAt: "",
 	}
 
-	err := mockUser.EnsureCreationAttributes()
+	err := mockUser.EnsureAttributes(db.CreateAction)
 
 	assert := test.Assert{T: t}
 	assert.ErrorIsNil(err)

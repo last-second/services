@@ -12,7 +12,7 @@ import (
 	"github.com/last-second/services/pkg/api"
 	"github.com/last-second/services/pkg/config"
 	"github.com/last-second/services/pkg/db"
-	"github.com/last-second/services/pkg/user"
+	"github.com/last-second/services/pkg/db/user"
 	"github.com/sirupsen/logrus"
 )
 
@@ -39,11 +39,12 @@ func handler(
 		return handler_util.RespondWithError(http.StatusBadRequest, api.ErrorInvalidBody.Add("body", event.Body).Trace(err), "Could not parse body")
 	}
 
-	if err := partialUser.EnsureCreationAttributes(); err != nil {
+	if err := partialUser.EnsureAttributes(db.CreateAction); err != nil {
 		return handler_util.RespondWithError(http.StatusBadRequest, err, "Can only specify email and user_name when creating a user")
 	}
 
-	createdUser, err := user.CreateUser(ctx, config.Values.UsertableName, &partialUser)
+	pendingUser := user.NewUser(partialUser.Email, partialUser.UserName)
+	createdUser, err := user.CreateUser(ctx, config.Values.UsertableName, pendingUser)
 	if err != nil {
 		return handler_util.RespondWithError(http.StatusInternalServerError, trace.Guarantee(err).Add("user", partialUser), "Error creating user")
 	}

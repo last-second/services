@@ -7,7 +7,8 @@ import (
 
 	trace "github.com/hans-m-song/go-stacktrace"
 	"github.com/last-second/services/pkg/config"
-	"github.com/last-second/services/pkg/user"
+	"github.com/last-second/services/pkg/db"
+	"github.com/last-second/services/pkg/db/user"
 )
 
 func createUser(rw http.ResponseWriter, r *http.Request) {
@@ -23,7 +24,7 @@ func createUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := partialUser.EnsureCreationAttributes(); err != nil {
+	if err := partialUser.EnsureAttributes(db.CreateAction); err != nil {
 		traced := trace.Guarantee(err).Add("user", partialUser)
 		writeErrorResponse(rw, http.StatusInternalServerError, traced.Message, traced)
 		return

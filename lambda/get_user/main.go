@@ -11,7 +11,7 @@ import (
 	"github.com/last-second/services/pkg/api"
 	"github.com/last-second/services/pkg/config"
 	"github.com/last-second/services/pkg/db"
-	"github.com/last-second/services/pkg/user"
+	"github.com/last-second/services/pkg/db/user"
 	"github.com/sirupsen/logrus"
 )
 

@@ -1,6 +1,7 @@
 package task
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -13,12 +14,9 @@ import (
 type FrequencyType string
 
 var (
-	ErrorUnmarshalTaskAttributes = trace.New("ERROR_UNMARSHAL_TASK_ATTRIBUTES")
-	ErrorMarshalTaskAttributes   = trace.New("ERROR_MARSHAL_TASK_ATTRIBUTES")
-	ErrorUnmarshalTask           = trace.New("ERROR_UNMARSHAL_TASK")
-	ErrorMarshalTask             = trace.New("ERROR_MARSHAL_TASK")
-	ErrorTaskFields              = trace.New("ERROR_TASK_FIELDS")
-	ErrorTaskFrequency           = trace.New("ERROR_TASK_FREQUENCY")
+	_ db.Model = (*Task)(nil)
+
+	ErrorTaskFrequency = trace.New("ERROR_TASK_FREQUENCY")
 )
 
 const (
@@ -70,79 +68,102 @@ func NewTask(
 	return task
 }
 
+func (task *Task) Marshal() ([]byte, error) {
+	result, err := json.Marshal(task)
+	if err != nil {
+		return nil, db.ErrorMarshalModel.Trace(err)
+	}
+
+	return result, nil
+}
+
 func (task *Task) MarshalAttributes(omitempty bool) (map[string]types.AttributeValue, error) {
 	attrs, err := attributevalue.MarshalMap(task)
 	if err != nil {
-		return nil, ErrorMarshalTaskAttributes.Trace(err).Add("task", task)
+		return nil, db.ErrorMarshalModelAttributes.Trace(err).Add("task", task)
 	}
 
-	if !omitempty {
-		return attrs, nil
+	if omitempty {
+		return db.FilterDynamodbAttributevalueMap(attrs), nil
 	}
 
-	return db.FilterDynamodbAttributevalueMap(attrs), nil
+	return attrs, nil
 }
 
 func UnmarshalAttributes(attributes map[string]types.AttributeValue) (*Task, error) {
 	result := Task{}
 	if err := attributevalue.UnmarshalMap(attributes, &result); err != nil {
-		return nil, ErrorUnmarshalTaskAttributes.Trace(err).Add("attributes", attributes)
+		return nil, db.ErrorUnmarshalModelAttributes.Trace(err).Add("attributes", attributes)
 	}
 
 	return &result, nil
 }
 
-func (task *Task) EnsureCreationAttributes() error {
-	missing := []string{}
-
-	if task.UserId == "" {
-		missing = append(missing, "UserId")
+func (task *Task) EnsureAttributes(action db.Action) error {
+	if db.ContainsAction([]db.Action{db.GetAction, db.DeleteAction, db.CreateAction}, action) {
+		return db.ErrorMissingAttributes.Tracef("id is required for action").
+			Add("action", action).
+			Add("fields", []string{"Id"})
 	}
 
-	if task.Title == "" {
-		missing = append(missing, "Title")
+	if action == db.CreateAction {
+		missing := []string{}
+
+		if task.UserId == "" {
+			missing = append(missing, "UserId")
+		}
+
+		if task.Title == "" {
+			missing = append(missing, "Title")
+		}
+
+		if task.StartAt == "" {
+			missing = append(missing, "StartAt")
+		}
+
+		if task.FrequencyType == "" {
+			missing = append(missing, "FrequencyType")
+		}
+
+		if len(missing) > 0 {
+			return db.ErrorMissingAttributes.Tracef("missing required field(s)").Add("fields", missing)
+		}
+
+		disallowed := []string{}
+
+		if task.Id != "" {
+			disallowed = append(disallowed, "Id")
+		}
+
+		if task.UserId != "" {
+			disallowed = append(disallowed, "UserId")
+		}
+
+		if task.CreatedAt != "" {
+			disallowed = append(disallowed, "CreatedAt")
+		}
+
+		if task.UpdatedAt != "" {
+			disallowed = append(disallowed, "UpdatedAt")
+		}
+
+		if len(disallowed) > 0 {
+			return db.ErrorForbiddenAttributes.Tracef("must not specify field(s)").Add("fields", disallowed)
+		}
 	}
 
-	if task.StartAt == "" {
-		missing = append(missing, "StartAt")
-	}
-
-	if task.FrequencyType == "" {
-		missing = append(missing, "FrequencyType")
-	}
+	invalid := []string{}
 
 	if task.FrequencyType != FrequencyTypeNever && task.Frequency == 0 {
-		missing = append(missing, "Frequency")
+		invalid = append(invalid, "Frequency")
 	}
 
 	if task.FrequencyType != FrequencyTypeNever && task.EndAt == "" {
-		missing = append(missing, "EndAt")
+		invalid = append(invalid, "EndAt")
 	}
 
-	if len(missing) > 0 {
-		return ErrorTaskFields.Tracef("missing required field(s)").Add("fields", missing)
-	}
-
-	disallowed := []string{}
-
-	if task.Id != "" {
-		disallowed = append(disallowed, "Id")
-	}
-
-	if task.UserId != "" {
-		disallowed = append(disallowed, "UserId")
-	}
-
-	if task.CreatedAt != "" {
-		disallowed = append(disallowed, "CreatedAt")
-	}
-
-	if task.UpdatedAt != "" {
-		disallowed = append(disallowed, "UpdatedAt")
-	}
-
-	if len(disallowed) > 0 {
-		return ErrorTaskFields.Tracef("must not specify field(s)").Add("fields", disallowed)
+	if len(invalid) > 0 {
+		return db.ErrorInvalidAttributes.Tracef("invalid combination of values for field(s)").Add("fields", invalid)
 	}
 
 	return nil

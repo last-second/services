@@ -13,6 +13,8 @@ import (
 )
 
 var (
+	_ db.Model = (*User)(nil)
+
 	ErrorUnmarshalUserAttributes = trace.New("ERROR_UNMARSHAL_USER_ATTRIBUTES")
 	ErrorMarshalUserAttributes   = trace.New("ERROR_MARSHAL_USER_ATTRIBUTES")
 	ErrorUnmarshalUser           = trace.New("ERROR_UNMARSHAL_USER")
@@ -28,20 +30,29 @@ type User struct {
 	UpdatedAt string `json:"updated_at" dynamodbav:"updated_at, omitempty"`
 }
 
+func (user *User) Marshal() ([]byte, error) {
+	result, err := json.Marshal(user)
+	if err != nil {
+		return nil, db.ErrorMarshalModel.Trace(err)
+	}
+
+	return result, err
+}
+
 func (user *User) MarshalAttributes(omitempty bool) (map[string]types.AttributeValue, error) {
 	attrs, err := attributevalue.MarshalMap(user)
 	if err != nil {
-		return nil, ErrorMarshalUser.Trace(err).Add("user", user)
+		return nil, db.ErrorMarshalModelAttributes.Trace(err).Add("user", user)
 	}
 
-	if !omitempty {
-		return attrs, nil
+	if omitempty {
+		return db.FilterDynamodbAttributevalueMap(attrs), nil
 	}
 
-	return db.FilterDynamodbAttributevalueMap(attrs), nil
+	return attrs, nil
 }
 
-func (user *User) EnsureCreationAttributes() error {
+func (user *User) EnsureAttributes(action db.Action) error {
 	required := []string{}
 
 	if user.Email == "" {
