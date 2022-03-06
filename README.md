@@ -2,7 +2,7 @@
 
 Backend functionality including:
 
-- deployment infrastructure (check infra folder)
+- deployment infrastructure with [serverless stack](https://serverless-stack.com/)
 - lambdas
   - user crud (in progress)
-  - task crud (todo)
+  - task crud (in progress)
