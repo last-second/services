@@ -30,7 +30,7 @@ export class UserStack extends sst.Stack {
 
     api.addRoutes(this, routes);
     Object.keys(routes).forEach((route) => {
-      api.getFunction(route)?.attachPermissions([table]);
+      api.attachPermissionsToRoute(route, [table]);
     });
 
     // Show the endpoint in the output

@@ -36,7 +36,7 @@ export class TaskStack extends sst.Stack {
 
     api.addRoutes(this, routes);
     Object.keys(routes).forEach((route) => {
-      api.getFunction(route)?.attachPermissions([table, userTable]);
+      api.attachPermissionsToRoute(route, [table, userTable]);
     });
 
     // Show the endpoint in the output
